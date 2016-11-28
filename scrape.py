@@ -4,7 +4,7 @@ import numpy as np
 from tabulate import tabulate
 from nltk.corpus import stopwords
 
-url = "https://en.wikipedia.org/wiki/Apple_Inc."
+url = "https://en.wikipedia.org/wiki/Technology"
 
 def get_all_words(url):
 
@@ -69,4 +69,4 @@ freq_table = create_frequency_table(cleaned_words)
 sorted_freq_table = sorted(freq_table.items(), key=operator.itemgetter(1), reverse=True)
 final_freq_table = calculate_word_percentage(sorted_freq_table)
 
-pretty_table_print(final_freq_table,10)
+pretty_table_print(final_freq_table,50)
