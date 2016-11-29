@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import numpy as np
 from tabulate import tabulate
 from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import CountVectorizer
 
 url = ["https://en.wikipedia.org/wiki/Iran",
 "https://en.wikipedia.org/wiki/Economy_of_Iran",
@@ -10,6 +11,8 @@ url = ["https://en.wikipedia.org/wiki/Iran",
 "https://en.wikipedia.org/wiki/Politics_of_Iran"]
 
 def get_all_words(url):
+	vectorizer = CountVectorizer(analyzer='word',min_df=1,ngram_range=(1,3),stop_words='english')
+	analyze = vectorizer.build_analyzer()
 	soups=[]
 	for eachUrl in url:
 		source = requests.get(eachUrl)
@@ -20,16 +23,18 @@ def get_all_words(url):
 		all_divs = soup.find_all('p')
 		for div in all_divs:
 			div_text = div.text.lower()
-			words_in_div = div_text.split()
+			# words_in_div = div_text.split()
+			words_in_div = analyze(div_text)
 			for each_word in words_in_div:
-				cleaned_word = clean_word(each_word)
-				if len(cleaned_word)>0:
+				cleaned_word = remove_numbers(each_word)
+				if len(cleaned_word.strip())>0:
 					all_words.append(cleaned_word)	
 	return all_words
 
-def clean_word(w):
+def remove_numbers(w):
 	# regex to get just the word and get rid of punctuations and numbers
-	cleaned_word = re.sub('[^A-Za-z]+', '', w)
+	# cleaned_word = re.sub('[^A-Za-z]+', '', w)
+	cleaned_word = re.sub('[0-9*]','',w)
 	return cleaned_word
 
 def remove_stop_words(word_array):
@@ -74,4 +79,4 @@ freq_table = create_frequency_table(cleaned_words)
 sorted_freq_table = sorted(freq_table.items(), key=operator.itemgetter(1), reverse=True)
 final_freq_table = calculate_word_percentage(sorted_freq_table)
 
-pretty_table_print(final_freq_table,100)
+pretty_table_print(final_freq_table,120)
