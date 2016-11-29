@@ -8,7 +8,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 url = ["https://en.wikipedia.org/wiki/Iran",
 "https://en.wikipedia.org/wiki/Economy_of_Iran",
 "https://en.wikipedia.org/wiki/History_of_Iran",
-"https://en.wikipedia.org/wiki/Politics_of_Iran"]
+"https://en.wikipedia.org/wiki/Politics_of_Iran",
+"https://en.wikipedia.org/wiki/Education_in_Iran",
+"https://en.wikipedia.org/wiki/Cinema_of_Iran",
+"https://en.wikipedia.org/wiki/Name_of_Iran"]
 
 def get_all_words(url):
 	vectorizer = CountVectorizer(analyzer='word',min_df=1,ngram_range=(1,3),stop_words='english')
@@ -79,4 +82,4 @@ freq_table = create_frequency_table(cleaned_words)
 sorted_freq_table = sorted(freq_table.items(), key=operator.itemgetter(1), reverse=True)
 final_freq_table = calculate_word_percentage(sorted_freq_table)
 
-pretty_table_print(final_freq_table,120)
+pretty_table_print(final_freq_table,320)
