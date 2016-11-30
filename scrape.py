@@ -54,6 +54,7 @@ def create_frequency_table(word_array):
 		if word in freq_table:
 			freq_table[word] += 1
 		else:
+
 			freq_table[word] = 1
 	return freq_table
 
@@ -63,7 +64,7 @@ def calculate_word_percentage(freq_table):
 
 	for word,occurence in freq_table:
 		total_words = total_words + occurence
-	
+	print('total words: ', total_words)
 	for key,value in freq_table:
 		percentage_value = float(value * 100) / total_words
 		percentage_added_list.append([key, value, round(percentage_value, 4)])
@@ -81,5 +82,12 @@ word_frequency = create_frequency_table(cleaned_words)
 freq_table = create_frequency_table(cleaned_words)
 sorted_freq_table = sorted(freq_table.items(), key=operator.itemgetter(1), reverse=True)
 final_freq_table = calculate_word_percentage(sorted_freq_table)
+
+def add_IR_tag(freq_list):
+	for key,row in enumerate(freq_list):
+		freq_list[key].append('IR')
+	return freq_list
+
+
 
 pretty_table_print(final_freq_table,320)
