@@ -1,3 +1,4 @@
+# hello
 import quandl
 import datetime, time
 import pandas as pd
@@ -12,7 +13,6 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
-
 style.use('ggplot')
 CSV_File = 'WIKI-AAPL.csv'
 
