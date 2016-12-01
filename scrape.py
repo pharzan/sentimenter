@@ -89,5 +89,4 @@ def add_IR_tag(freq_list):
 	return freq_list
 
 
-
 pretty_table_print(final_freq_table,320)

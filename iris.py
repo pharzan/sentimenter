@@ -52,7 +52,8 @@ predicted = GaussianNB_clf.predict(test)
 print('\x1b[6;30;42m' +' Guassian: '+'\x1b[0m ',GaussianNB_clf.score(test,test_targets))
 print(metrics.classification_report(test_targets,predicted))
 
-
+print(type(train_data),train_data)
+print(type(targets),targets)
 SVM_clf = SVC(kernel='linear',C=1.0)
 SVM_clf.fit(train_data,targets)
 
