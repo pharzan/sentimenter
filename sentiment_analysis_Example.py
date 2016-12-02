@@ -5,6 +5,7 @@ from sklearn.naive_bayes import BernoulliNB
 from sklearn.metrics import classification_report
 import pandas as pd
 import numpy as np
+import random
 from sklearn.metrics import accuracy_score
 
 # review.csv contains two columns
@@ -25,8 +26,40 @@ d =                 ['Farzan is a great guy.',
                     'Nobody wants to be like payam.']
 
 target=[1,1,1,1,1,1,1,0,0,0,0]
-df['Positive']=pd.read_csv('positive.txt',sep='/n')
+def read_data(path):
+    data=[]
+    with open(path,'rb') as file:
+        data=file.read()
+    data=data.lower()
+    data = data.splitlines()
 
+    return data
+
+positives = read_data('positive.txt')
+negatives = read_data('negative.txt')
+df=[]
+
+for line in positives:
+    df.append([line,'pos'])
+for line in negatives:
+    df.append([line,'neg'])
+
+random.shuffle(df)
+print(df[0])
+
+data=[]
+target=[]
+def create_train_target():
+    for line in df:
+        if(line[1]=='pos'):
+            data.append(line[0])
+            target.append(1)
+        else:
+            data.append(line[0])
+            target.append(0)
+
+create_train_target()
+print(len(target),len(data))
 # from sklearn.datasets import fetch_20newsgroups
 # twenty_train = fetch_20newsgroups(subset='train', categories=categories, shuffle=True, random_state=42)
 # from sklearn.feature_extraction.text import CountVectorizer
