@@ -3,6 +3,12 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import average_precision_score
+from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import numpy as np
 import random
@@ -30,9 +36,9 @@ def read_data(path):
     data=[]
     with open(path,'rb') as file:
         data=file.read()
+        
     data=data.lower()
     data = data.splitlines()
-
     return data
 
 positives = read_data('positive.txt')
@@ -40,8 +46,10 @@ negatives = read_data('negative.txt')
 df=[]
 
 for line in positives:
+    line = str(line, errors='replace')
     df.append([line,'pos'])
 for line in negatives:
+    line = str(line, errors='replace')
     df.append([line,'neg'])
 
 random.shuffle(df)
@@ -59,30 +67,38 @@ def create_train_target():
             target.append(0)
 
 create_train_target()
-print(len(target),len(data))
+print('Target LENGTH:',len(target),'DATA LENGTH:',len(data))
+
 # from sklearn.datasets import fetch_20newsgroups
 # twenty_train = fetch_20newsgroups(subset='train', categories=categories, shuffle=True, random_state=42)
-# from sklearn.feature_extraction.text import CountVectorizer
-# count_vect = CountVectorizer()
-# X_train_counts = count_vect.fit_transform(d)
+from sklearn.feature_extraction.text import CountVectorizer
+count_vect = CountVectorizer()
+X_train = count_vect.fit_transform(data[:9000])
 
-# #From occurrences to frequencies
-# from sklearn.feature_extraction.text import TfidfTransformer
-# tf_transformer = TfidfTransformer(use_idf=False).fit(X_train_counts)
-# X_train_tf = tf_transformer.transform(X_train_counts)
-# X_train_tf.shape
+#From occurrences to frequencies
+from sklearn.feature_extraction.text import TfidfTransformer
+tf_transformer = TfidfTransformer(use_idf=False).fit(X_train)
+X_train_tf = tf_transformer.transform(X_train)
+print(X_train_tf.shape)
 
 # #Training a classifier
-# tfidf_transformer = TfidfTransformer()
-# X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
-# X_train_tfidf.shape
+tfidf_transformer = TfidfTransformer()
+X_train_tfidf = tfidf_transformer.fit_transform(X_train)
+print(X_train_tfidf.shape)
 
-# from sklearn.naive_bayes import MultinomialNB
-# clf = MultinomialNB().fit(X_train_tfidf, target)
+from sklearn.naive_bayes import MultinomialNB
+clf = MultinomialNB().fit(X_train_tfidf, target[:9000])
 
-# docs_new = ['he is bad', 'He is a loser and not a winner']
-# X_new_counts = count_vect.transform(docs_new)
-# X_new_tfidf = tfidf_transformer.transform(X_new_counts)
 
-# predicted = clf.predict(X_new_tfidf)
-# print(predicted)
+test_data = data[9000:]
+print('!!!!',len(data))
+X_new_counts = count_vect.transform(test_data)
+X_new_tfidf = tfidf_transformer.transform(X_new_counts)
+
+predicted = clf.predict(X_new_tfidf)
+print('\x1b[0;30;41m' +' ROC: '+'\x1b[0m ',roc_auc_score(target[9000:], predicted))
+print('\x1b[0;30;41m' +' accuracy: '+'\x1b[0m ',accuracy_score(target[9000:], predicted))
+print('\x1b[0;30;41m' +' Report: '+'\x1b[0m ',classification_report(target[9000:], predicted))
+print('\x1b[0;30;41m' +' precision_score: '+'\x1b[0m ',precision_score(target[9000:], predicted))
+print('\x1b[0;30;41m' +' precision_score: '+'\x1b[0m ',average_precision_score(target[9000:], predicted))
+print(predicted)
